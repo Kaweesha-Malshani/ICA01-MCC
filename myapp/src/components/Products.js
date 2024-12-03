@@ -1,7 +1,22 @@
 import '../assets/CSS/layout.css';
+import React, { useState } from 'react';
+import Product from './Product';
+import Cart from './Cart';
+import { flowers } from './FlowerDB';
 
 
 export default function Products(){
+    const [cartItems, setCartItems] = useState([]);
+
+    const addToCart = (flower, quantity) => {
+        const existingItem = cartItems.find(item => item.id === flower.id);
+        if (existingItem) {
+            existingItem.qty += quantity;
+            setCartItems([...cartItems]);
+        } else {
+            setCartItems([...cartItems, { ...flower, qty: quantity }]);
+        }
+    };
    
     return(
         <>
@@ -13,6 +28,9 @@ export default function Products(){
                 <div className="grid-container">
                     {
                         //product
+                        flowers.map(flower => (
+                            <Product key={flower.id} flower={flower}  addToCart={addToCart}/>
+                        ))
                     }
                 </div>
 
@@ -20,6 +38,7 @@ export default function Products(){
             <div className="item3">
                 {
                 //cart
+                <Cart cartItems={cartItems} />
                 }
             </div>
         </>
